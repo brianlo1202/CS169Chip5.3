@@ -7,14 +7,27 @@ class MoviesController < ApplicationController
   end
 
   def index
-    
+        
     @all_ratings = Movie.all_ratings()
         
     # handle check box filter
-    @ratings_to_show = []
     if params.has_key?(:ratings)  
       @ratings_to_show = params[:ratings].keys
+    else
+      @ratings_to_show = []
+    
     end
+    
+    if not params.has_key?(:home)
+      puts("CAME FROM DIFF PAGE")
+      if session.has_key?(:ratingsToShow)
+        @ratings_to_show = session[:ratingsToShow]
+      end
+    end
+    
+    session[:ratingsToShow] = @ratings_to_show      
+     
+          
     @movies = Movie.with_ratings(@ratings_to_show)
     
     # handle sorting
@@ -30,7 +43,22 @@ class MoviesController < ApplicationController
         @movies = @movies.order(:release_date)
         @release_date_col_class = "bg-warning hilite"
       end
+      
+      #cookie
+      session[:colToSort] = colToSort
+      
+     elsif session.has_key?(:colToSort) 
+       colToSort = session[:colToSort]
+      puts("col to Sort: " + colToSort)
+      if colToSort == "Movie Title"
+        @movies = @movies.order(:title)
+        @movie_title_col_class = "hilite" + " " + "bg-warning"
+      elsif colToSort == "Release Date"
+        @movies = @movies.order(:release_date)
+        @release_date_col_class = "bg-warning hilite"
+      end
     end
+    
   end
 
   def new
