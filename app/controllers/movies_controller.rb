@@ -9,18 +9,23 @@ class MoviesController < ApplicationController
   def index
     
     @all_ratings = Movie.all_ratings()
-    
-    @test = params[:ratings]
-    
+        
+    # handle check box filter
     @ratings_to_show = []
     if params.has_key?(:ratings)  
       @ratings_to_show = params[:ratings].keys
     end
     @movies = Movie.with_ratings(@ratings_to_show)
     
+    # handle sorting
     if params.has_key?(:clickedCol)
       colToSort = params[:clickedCol]
       puts("col to Sort: " + colToSort)
+      if colToSort == "Movie Title"
+        @movies = @movies.order(:title)
+      elsif colToSort == "Release Date"
+        @movies = @movies.order(:release_date)
+      end
     end
   end
 
