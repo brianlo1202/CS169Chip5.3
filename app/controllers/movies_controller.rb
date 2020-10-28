@@ -16,8 +16,12 @@ class MoviesController < ApplicationController
     if params.has_key?(:ratings)  
       @ratings_to_show = params[:ratings].keys
     end
-    
     @movies = Movie.with_ratings(@ratings_to_show)
+    
+    if params.has_key?(:clickedCol)
+      colToSort = params[:clickedCol]
+      puts("col to Sort: " + colToSort)
+    end
   end
 
   def new
