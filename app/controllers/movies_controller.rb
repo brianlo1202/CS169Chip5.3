@@ -18,13 +18,17 @@ class MoviesController < ApplicationController
     @movies = Movie.with_ratings(@ratings_to_show)
     
     # handle sorting
+    @movie_title_col_class = "bg-transparent"
+    @release_date_col_class = "bg-transparent"
     if params.has_key?(:clickedCol)
       colToSort = params[:clickedCol]
       puts("col to Sort: " + colToSort)
       if colToSort == "Movie Title"
         @movies = @movies.order(:title)
+        @movie_title_col_class = "hilite" + " " + "bg-warning"
       elsif colToSort == "Release Date"
         @movies = @movies.order(:release_date)
+        @release_date_col_class = "bg-warning hilite"
       end
     end
   end
